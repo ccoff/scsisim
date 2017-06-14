@@ -30,7 +30,7 @@ Additionally, you can use the following command-line options with the **demo** a
 
 `-v`: Display verbose information, including raw SCSI commands and responses, diagnostic information, etc. All verbose information goes to stderr, so you can redirect output as needed.
 
-**NOTE:** On some Linux distros (Debian and Ubuntu; maybe others), you must add the current user to the **disk** group. This ensures that the user has sufficient privileges to access the device directly using SCSI. Otherwise, you may have to run the demo app as the root user.
+**NOTE:** On some Linux distros (Debian and Ubuntu; maybe others), you must add the current user to the **disk** group. This ensures that the user has sufficient privileges to access the device directly using SCSI. Otherwise, you will have to run the demo app as the root user.
 
 For example, on Debian type the following command to add a user to the **disk** group (replace [USERNAME] with the current username):
 

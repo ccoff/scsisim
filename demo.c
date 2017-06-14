@@ -113,7 +113,8 @@ int main(int argc, char *argv[])
 		/* Is the SIM card's PIN already blocked? */
 		if (resp.type.mf_df.CHV1_attempts_remaining == 0)
 		{
-			scsisim_pinfo("PIN blocked; %d PIN unblock attempts remaining", resp.type.mf_df.CHV1_unblock_attempts_remaining);
+			scsisim_pinfo("PIN blocked; %d PIN unblock attempts remaining",
+				      resp.type.mf_df.CHV1_unblock_attempts_remaining);
 			goto close_device;
 		}
 

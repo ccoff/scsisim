@@ -366,8 +366,8 @@ int scsisim_read_binary(const struct sg_dev *device,
 	memcpy(cdb, sim_devices[device->index].CDB_read_binary, sizeof(cdb));
 
 	/* Set the offsets and length */
-	cdb[sim_devices[device->index].read_binary_hi_offset] = offset >> 8;	/* offset high */
-	cdb[sim_devices[device->index].read_binary_lo_offset] = offset & 0xff;	/* offset low */
+	cdb[sim_devices[device->index].read_binary_hi_offset] = offset >> 8;   /* offset high */
+	cdb[sim_devices[device->index].read_binary_lo_offset] = offset & 0xff; /* offset low */
 	cdb[sim_devices[device->index].read_binary_len_offset] = len;
 
 	/* Set up the command block */
@@ -469,8 +469,8 @@ int scsisim_update_binary(const struct sg_dev *device,
 	memcpy(cdb, sim_devices[device->index].CDB_update_binary, sizeof(cdb));
 
 	/* Set the offsets and length */
-	cdb[sim_devices[device->index].update_binary_hi_offset] = offset >> 8;	/* offset high */
-	cdb[sim_devices[device->index].update_binary_lo_offset] = offset & 0xff;	/* offset low */
+	cdb[sim_devices[device->index].update_binary_hi_offset] = offset >> 8;   /* offset high */
+	cdb[sim_devices[device->index].update_binary_lo_offset] = offset & 0xff; /* offset low */
 	cdb[sim_devices[device->index].update_binary_len_offset] = len;
 
 	/* Set up the command block */
@@ -583,7 +583,8 @@ int scsisim_send_raw_command(const struct sg_dev *device,
 	memcpy(cdb, sim_devices[device->index].CDB_raw_cmd, sizeof(cdb));
 
 	/* Set the command parameters */
-	cdb[sim_devices[device->index].raw_cmd_direction_offset] = (direction == SIM_WRITE) ? sim_devices[device->index].scsi_cmd_write : sim_devices[device->index].scsi_cmd_read;
+	cdb[sim_devices[device->index].raw_cmd_direction_offset] =
+		(direction == SIM_WRITE) ? sim_devices[device->index].scsi_cmd_write : sim_devices[device->index].scsi_cmd_read;
 	cdb[sim_devices[device->index].raw_cmd_gsm_cmd_offset] = command;
 	cdb[sim_devices[device->index].raw_cmd_p1_offset] = P1;
 	cdb[sim_devices[device->index].raw_cmd_p2_offset] = P2;
