@@ -1,0 +1,7 @@
+*~
+*.swp
+*.[oa]
+*.so
+shared/
+static/
+demo
