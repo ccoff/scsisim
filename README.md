@@ -16,7 +16,7 @@ For the record, here is what `lsusb` reports for the "APM UR-200" USB SIM card r
 
 ## How to build
 
-Assuming `gcc` and `make` are installed on your system, building everything is as easy as running `make` from the source directory. The makefile builds the following:
+Assuming `gcc` and `make` are installed on your system, building everything is as easy as running `make` from the project root directory. The makefile builds the following in the **build** subdirectory:
 
 * **libscsisim.so** (shared library)
 * **libscsisim.a** (static library)
