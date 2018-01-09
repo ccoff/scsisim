@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
@@ -100,7 +101,7 @@ static const char *error_list[] = {
  * Return values: 
  * None
  */
-void print_binary_buffer(const unsigned char *buf, const unsigned int len)
+void print_binary_buffer(const uint8_t *buf, const unsigned int len)
 {
 	unsigned int i;
 	char ascii[ROW_SIZE + 1] = "";
@@ -137,14 +138,14 @@ void print_binary_buffer(const unsigned char *buf, const unsigned int len)
 /**
  * For information about this function, see scsisim.h
  */
-char *scsisim_packed_bcd_to_ascii(const unsigned char *bcd,
+char *scsisim_packed_bcd_to_ascii(const uint8_t *bcd,
 				  const unsigned int len,
 				  bool little_endian,
 				  bool strip_sign_flag,
 				  bool use_telecom_digits)
 {
 	unsigned int i;
-	unsigned char lo_nibble, hi_nibble;
+	uint8_t lo_nibble, hi_nibble;
 	char lo_char, hi_char, *ascii = NULL, *tmp = NULL;
 
 	if (bcd == NULL ||
@@ -188,13 +189,13 @@ char *scsisim_packed_bcd_to_ascii(const unsigned char *bcd,
  * For information about this function, see scsisim.h
  */
 void scsisim_unpack_septets(const unsigned int num_septets,
-			    const unsigned char *packed,
+			    const uint8_t *packed,
 			    const unsigned int packed_len,
-			    unsigned char **unpacked,
+			    uint8_t **unpacked,
 			    unsigned int *unpacked_len)
 {
 	unsigned int i, cur_pos;
-	unsigned char tmp, *ptr = NULL;
+	uint8_t tmp, *ptr = NULL;
 
 	if (num_septets <= 0 || packed == NULL || packed_len <= 0)
 		return;

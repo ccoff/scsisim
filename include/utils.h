@@ -24,11 +24,12 @@
 #define __SCSISIM_UTILS_H__
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #define MIN(x,y) (((x) < (y)) ? (x) : (y))
 #define MAX(x,y) (((x) > (y)) ? (x) : (y))
 
-void print_binary_buffer(const unsigned char *buf, const unsigned int len);
+void print_binary_buffer(const uint8_t *buf, const unsigned int len);
 
 bool is_digit_string(const char *str);
 

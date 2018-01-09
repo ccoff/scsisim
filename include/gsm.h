@@ -24,6 +24,7 @@
 #define __SCSISIM_GSM_H__
 
 #include <stdbool.h>
+#include <stdint.h>
 
 /* GSM command codes: these are only the commands the API currently supports, not
  * every single GSM command code. If you need to use a command code not listed here, 
@@ -68,7 +69,7 @@ extern const char *GSM_sms_status[];
 extern const char *GSM_file_type[];
 extern const char *GSM_ef_structure[];
 
-int gsm_parse_response(const unsigned char *response,
+int gsm_parse_response(const uint8_t *response,
 		       unsigned int response_len,
 		       struct GSM_response *resp);
 

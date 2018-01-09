@@ -26,6 +26,7 @@
 #define __SCSISIM_DEVICE_H__
 
 #include <stddef.h>
+#include <stdint.h>
 
 #include "gsm.h"
 
@@ -52,7 +53,7 @@ static const unsigned int supported_devices[][3] = {
 
 /* Celly SIM Card Reader:
  * Device initialization data - write buffer 1 */
-static const unsigned char celly_buf_1[512] = {
+static const uint8_t celly_buf_1[512] = {
 	0x5a, 0x5a, 0x5a, 0x5a, 0xbe, 0x54, 0x62, 0x0d, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x01, 0x00, 0xc9, 0xee, 0xdb, 0xda, 0xca, 0xd0, 0xd0, 0xbe, 0xb0, 0xee,
@@ -100,7 +101,7 @@ static const unsigned char celly_buf_1[512] = {
 
 /* Celly SIM Card Reader:
  * Device initialization data - write buffer 2 */
-static const unsigned char celly_buf_2[4096] = {
+static const uint8_t celly_buf_2[4096] = {
 	0x06, 0x58, 0x60, 0x00, 0x06, 0x00, 0x68, 0x00, 0x06, 0x58, 0x60, 0x00,
 	0x06, 0x58, 0x60, 0x00, 0x06, 0xf8, 0x67, 0x00, 0x06, 0xf8, 0x67, 0x00,
 	0x06, 0x38, 0x67, 0x00, 0x06, 0xf8, 0x67, 0x00, 0x06, 0xf8, 0x67, 0x00,
@@ -447,11 +448,11 @@ static const unsigned char celly_buf_2[4096] = {
 
 /* Celly SIM Card Reader:
  * Device initialization data - write buffer 3 */
-static const unsigned char celly_buf_3[4] = { 0x00, 0x20, 0x04, 0x2a };
+static const uint8_t celly_buf_3[4] = { 0x00, 0x20, 0x04, 0x2a };
 
 /* Device initialization data - read buffer 
  * (Generic - can be used by any device) */
-static unsigned char init_read_buf[4096] = { 0x00 };
+static uint8_t init_read_buf[4096] = { 0x00 };
 
 /* Structure to hold everything necessary to send an initialization command
  * to the device */
@@ -461,78 +462,78 @@ struct device_init_cmd {
 	int direction;
 
 	/* Raw SCSI CDB (command data block) */
-	unsigned char cdb[MAX_CDB_LEN];
+	uint8_t cdb[MAX_CDB_LEN];
 
 	/* Length of data buffer */
 	unsigned int data_len;
 
 	/* Pointer to data buffer. The data can be output (for a write command)
 	 * or input (for a read command). */
-	unsigned char *data;
+	uint8_t *data;
 };
 
 /* Structure to hold everything necessary to define a SCSI-based SIM card reader */
 struct device {
 
 	/* Maximum length of SCSI sense buffer for the device */
-	unsigned char sense_len;
+	uint8_t sense_len;
 
 	/* Offset in sense data for type */
-	unsigned char sense_type_offset;
+	uint8_t sense_type_offset;
 
 	/* Offset in sense data for ASC (additional sense code) */
-	unsigned char sense_asc_offset;
+	uint8_t sense_asc_offset;
 
 	/* Offset in sense data for ASCQ (additional sense code qualifier) */
-	unsigned char sense_ascq_offset;
+	uint8_t sense_ascq_offset;
 
 	/* SCSI READ and WRITE command codes for the device */
-	unsigned char scsi_cmd_read;
-	unsigned char scsi_cmd_write;
+	uint8_t scsi_cmd_read;
+	uint8_t scsi_cmd_write;
 
 	/* SCSI CDB (command data block) length for the device */
-	unsigned char cdb_len;
+	uint8_t cdb_len;
 
 	/* CDB for the GSM SELECT command */
-	unsigned char CDB_select_file[MAX_CDB_LEN];
+	uint8_t CDB_select_file[MAX_CDB_LEN];
 
 	/* CDB and relevant offsets for the GSM GET RESPONSE command */
-	unsigned char CDB_get_response[MAX_CDB_LEN];
-	unsigned char get_response_len_offset;
+	uint8_t CDB_get_response[MAX_CDB_LEN];
+	uint8_t get_response_len_offset;
 
 	/* CDB and relevant offsets for the GSM READ RECORD command */
-	unsigned char CDB_read_record[MAX_CDB_LEN];
-	unsigned char read_record_rec_offset;
-	unsigned char read_record_len_offset;
+	uint8_t CDB_read_record[MAX_CDB_LEN];
+	uint8_t read_record_rec_offset;
+	uint8_t read_record_len_offset;
 
 	/* CDB and relevant offsets for the GSM READ BINARY command */
-	unsigned char CDB_read_binary[MAX_CDB_LEN];
-	unsigned char read_binary_hi_offset;
-	unsigned char read_binary_lo_offset;
-	unsigned char read_binary_len_offset;
+	uint8_t CDB_read_binary[MAX_CDB_LEN];
+	uint8_t read_binary_hi_offset;
+	uint8_t read_binary_lo_offset;
+	uint8_t read_binary_len_offset;
 
 	/* CDB and relevant offsets for the GSM UPDATE RECORD command */
-	unsigned char CDB_update_record[MAX_CDB_LEN];
-	unsigned char update_record_rec_offset;
-	unsigned char update_record_len_offset;
+	uint8_t CDB_update_record[MAX_CDB_LEN];
+	uint8_t update_record_rec_offset;
+	uint8_t update_record_len_offset;
 
 	/* CDB and relevant offsets for the GSM UPDATE BINARY command */
-	unsigned char CDB_update_binary[MAX_CDB_LEN];
-	unsigned char update_binary_hi_offset;
-	unsigned char update_binary_lo_offset;
-	unsigned char update_binary_len_offset;
+	uint8_t CDB_update_binary[MAX_CDB_LEN];
+	uint8_t update_binary_hi_offset;
+	uint8_t update_binary_lo_offset;
+	uint8_t update_binary_len_offset;
 
 	/* CDB and relevant offsets for the GSM VERIFY CHV command */
-	unsigned char CDB_verify_chv[MAX_CDB_LEN];
-	unsigned char verify_chv_chvnum_offset;
+	uint8_t CDB_verify_chv[MAX_CDB_LEN];
+	uint8_t verify_chv_chvnum_offset;
 
 	/* CDB and relevant offsets for raw, arbitrary GSM command */
-	unsigned char CDB_raw_cmd[MAX_CDB_LEN];
-	unsigned char raw_cmd_direction_offset;
-	unsigned char raw_cmd_gsm_cmd_offset;
-	unsigned char raw_cmd_p1_offset;
-	unsigned char raw_cmd_p2_offset;
-	unsigned char raw_cmd_p3_offset;
+	uint8_t CDB_raw_cmd[MAX_CDB_LEN];
+	uint8_t raw_cmd_direction_offset;
+	uint8_t raw_cmd_gsm_cmd_offset;
+	uint8_t raw_cmd_p1_offset;
+	uint8_t raw_cmd_p2_offset;
+	uint8_t raw_cmd_p3_offset;
 
 	/* Initialization commands: the size of 16 for this array is completely 
 	 * arbitrary. The device I have sends 9 init commands. If a device turns 
@@ -703,13 +704,13 @@ static const struct device sim_devices[1] = {
 				SIM_WRITE,
 				{ SCSI_CMD_WRITE_10, 0x00, 0x22, 0x80, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00 },
 				sizeof(celly_buf_1),
-				(unsigned char*)celly_buf_1
+				(uint8_t*)celly_buf_1
 			},
 			{
 				SIM_WRITE,
 				{ SCSI_CMD_WRITE_10, 0x00, 0x78, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00 },
 				sizeof(celly_buf_2),
-				(unsigned char*)celly_buf_2
+				(uint8_t*)celly_buf_2
 			},
 			{
 				SIM_READ,
@@ -721,7 +722,7 @@ static const struct device sim_devices[1] = {
 				SIM_WRITE,
 				{ SCSI_CMD_WRITE_10, 0x00, 0xd4, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x04 },
 				sizeof(celly_buf_3),
-				(unsigned char*)celly_buf_3
+				(uint8_t*)celly_buf_3
 			},
 			{
 				SIM_READ,

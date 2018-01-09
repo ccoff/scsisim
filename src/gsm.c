@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -130,16 +131,16 @@ const char *GSM_ef_structure[] = {
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_parse_sms(const unsigned char *record, unsigned char record_len)
+int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 {
 	/* $FIXUP: This mega-function is just a quick and dirty way to parse 
 	 * SMS records. It should be chopped down to size and split into 
 	 * multiple functions. */
 
-	const unsigned char *ptr = record;
+	const uint8_t *ptr = record;
 	unsigned int smsc_len, address_len, msg_len, num_septets, bytes_used, bytes_remaining;
-	unsigned char sms_status, charset, *tmp = NULL;
-	unsigned char year, month, day, hours, minutes, seconds;
+	uint8_t sms_status, charset, *tmp = NULL;
+	uint8_t year, month, day, hours, minutes, seconds;
 	char *tmp_str1 = NULL, *tmp_str2 = NULL, *tmp_str3 = NULL, *buf = NULL;
 	bool is_alphanum = false;
 
@@ -437,11 +438,11 @@ int scsisim_parse_sms(const unsigned char *record, unsigned char record_len)
 /**
  * For information about this function, see scsisim.h
  */
-char *scsisim_get_gsm_text(const unsigned char *packed,
+char *scsisim_get_gsm_text(const uint8_t *packed,
 			   unsigned int packed_len,
 			   unsigned int num_septets)
 {
-	unsigned char *unpacked = NULL;
+	uint8_t *unpacked = NULL;
 	unsigned int unpacked_len;
 	char *smsText = NULL;
 
@@ -467,7 +468,7 @@ char *scsisim_get_gsm_text(const unsigned char *packed,
 /**
  * For information about this function, see scsisim.h
  */
-char *scsisim_map_gsm_chars(const unsigned char *src, unsigned int src_len)
+char *scsisim_map_gsm_chars(const uint8_t *src, unsigned int src_len)
 {
 	unsigned int i;
 	char *result = NULL, *dest;
@@ -527,11 +528,11 @@ char *scsisim_map_gsm_chars(const unsigned char *src, unsigned int src_len)
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_parse_adn(const unsigned char *record, unsigned char record_len)
+int scsisim_parse_adn(const uint8_t *record, uint8_t record_len)
 {
-	const unsigned char* ptr = record;
+	const uint8_t* ptr = record;
 	unsigned int name_len, number_len;
-	unsigned char *tmp = NULL;
+	uint8_t *tmp = NULL;
 	char *buf = NULL;
 
 	/* Check record_len: 14 bytes (required) for number buffer, 
@@ -603,7 +604,7 @@ int scsisim_parse_adn(const unsigned char *record, unsigned char record_len)
  * SCSISIM_SUCCESS
  * SCSISIM_INVALID_GSM_RESPONSE
  */
-int gsm_parse_response(const unsigned char *response,
+int gsm_parse_response(const uint8_t *response,
 		       unsigned int response_len,
 		       struct GSM_response *resp)
 {

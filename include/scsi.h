@@ -23,20 +23,22 @@
 #ifndef __SCSISIM_SCSI_H__
 #define __SCSISIM_SCSI_H__
 
+#include <stdint.h>
+
 /* This struct contains everything needed to 
  * send a READ or WRITE command to the device */
 struct scsi_cmd {
 	/* Input values */
 	int direction;
-	unsigned char cdb_len;
-	unsigned char *cdb;
+	uint8_t cdb_len;
+	uint8_t *cdb;
 	unsigned int data_len;
-	unsigned char *data;
-	unsigned char sense_len;
-	unsigned char *sense;
+	uint8_t *data;
+	uint8_t sense_len;
+	uint8_t *sense;
 	/* Output values */
 	unsigned int data_xfered;
-	unsigned char sense_xfered;
+	uint8_t sense_xfered;
 };
 
 int scsi_send_cdb(const struct sg_dev *device, struct scsi_cmd *my_cmd);

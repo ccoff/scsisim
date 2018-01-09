@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
@@ -35,7 +36,7 @@
 #include "utils.h"
 
 static int sim_process_scsi_sense(const struct sg_dev *device,
-				  const unsigned char *sense,
+				  const uint8_t *sense,
 				  unsigned int len);
 
 static inline void sim_free_device_name(struct sg_dev *device);
@@ -126,7 +127,7 @@ int scsisim_init_device(struct sg_dev *device)
 	int ret, i;
 	unsigned int idVendor, idProduct;
 	struct scsi_cmd my_cmd = { 0 };
-	unsigned char sense[32] = { 0 };
+	uint8_t sense[32] = { 0 };
 
 	if (device == NULL)
 		return SCSISIM_INVALID_PARAM;
@@ -146,12 +147,12 @@ int scsisim_init_device(struct sg_dev *device)
 	{
 		/* Set up the command block */
 		my_cmd.direction = sim_devices[device->index].init_cmd[i].direction;
-		my_cmd.cdb = (unsigned char*)sim_devices[device->index].init_cmd[i].cdb;
+		my_cmd.cdb = (uint8_t*)sim_devices[device->index].init_cmd[i].cdb;
 		my_cmd.cdb_len = sim_devices[device->index].cdb_len;
 		my_cmd.data = sim_devices[device->index].init_cmd[i].data;
 		my_cmd.data_len = sim_devices[device->index].init_cmd[i].data_len;
 		my_cmd.sense = sense;
-		my_cmd.sense_len = (unsigned char)sizeof(sense);
+		my_cmd.sense_len = (uint8_t)sizeof(sense);
 
 		/* Send the commmand */
 		if ((ret = scsi_send_cdb(device, &my_cmd)) != SCSISIM_SUCCESS)
@@ -166,15 +167,15 @@ int scsisim_init_device(struct sg_dev *device)
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_select_file(const struct sg_dev *device, unsigned short file)
+int scsisim_select_file(const struct sg_dev *device, uint16_t file)
 {
 	int ret;
 	struct scsi_cmd my_cmd = { 0 };
-	unsigned char cdb[sim_devices[device->index].cdb_len];
-	unsigned char data[GSM_CMD_SELECT_DATA_LEN] = { 0 };
-	unsigned char sense[sim_devices[device->index].sense_len];
+	uint8_t cdb[sim_devices[device->index].cdb_len];
+	uint8_t data[GSM_CMD_SELECT_DATA_LEN] = { 0 };
+	uint8_t sense[sim_devices[device->index].sense_len];
 
-	if (device == NULL || file > 0xffff)
+	if (device == NULL)
 		return SCSISIM_INVALID_PARAM;
 
 	memset(sense, 0, sizeof(sense));
@@ -189,11 +190,11 @@ int scsisim_select_file(const struct sg_dev *device, unsigned short file)
 	/* Set up the command block */
 	my_cmd.direction = SIM_WRITE;
 	my_cmd.cdb = cdb;
-	my_cmd.cdb_len = (unsigned char)sizeof(cdb);
+	my_cmd.cdb_len = (uint8_t)sizeof(cdb);
 	my_cmd.data = data;
-	my_cmd.data_len = (unsigned char)sizeof(data);
+	my_cmd.data_len = (uint8_t)sizeof(data);
 	my_cmd.sense = sense;
-	my_cmd.sense_len = (unsigned char)sizeof(sense);
+	my_cmd.sense_len = (uint8_t)sizeof(sense);
 
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
@@ -215,15 +216,15 @@ int scsisim_select_file(const struct sg_dev *device, unsigned short file)
  * For information about this function, see scsisim.h
  */
 int scsisim_get_response(const struct sg_dev *device,
-			 unsigned char *data,
-			 unsigned char len,
+			 uint8_t *data,
+			 uint8_t len,
 			 int command,
 			 struct GSM_response *resp)
 {
 	int ret;
 	struct scsi_cmd my_cmd = { 0 };
-	unsigned char cdb[sim_devices[device->index].cdb_len];
-	unsigned char sense[sim_devices[device->index].sense_len];
+	uint8_t cdb[sim_devices[device->index].cdb_len];
+	uint8_t sense[sim_devices[device->index].sense_len];
 
 	if (device == NULL || data == NULL || len <= 0 || resp == NULL)
 		return SCSISIM_INVALID_PARAM;
@@ -239,11 +240,11 @@ int scsisim_get_response(const struct sg_dev *device,
 	/* Set up the command block */
 	my_cmd.direction = SIM_READ;
 	my_cmd.cdb = cdb;
-	my_cmd.cdb_len = (unsigned char)sizeof(cdb);
+	my_cmd.cdb_len = (uint8_t)sizeof(cdb);
 	my_cmd.data = data;
 	my_cmd.data_len = len;
 	my_cmd.sense = sense;
-	my_cmd.sense_len = (unsigned char)sizeof(sense);
+	my_cmd.sense_len = (uint8_t)sizeof(sense);
 
 	resp->command = command;
 
@@ -277,9 +278,9 @@ int scsisim_get_response(const struct sg_dev *device,
  * For information about this function, see scsisim.h
  */
 int scsisim_select_file_and_get_response(const struct sg_dev *device,
-					 unsigned short file,
-					 unsigned char *data,
-					 unsigned char len,
+					 uint16_t file,
+					 uint8_t *data,
+					 uint8_t len,
 					 int command,
 					 struct GSM_response *resp)
 {
@@ -297,14 +298,14 @@ int scsisim_select_file_and_get_response(const struct sg_dev *device,
  * For information about this function, see scsisim.h
  */
 int scsisim_read_record(const struct sg_dev *device,
-			unsigned char recno,
-			unsigned char *data,
-			unsigned char len)
+			uint8_t recno,
+			uint8_t *data,
+			uint8_t len)
 {
 	int ret;
 	struct scsi_cmd my_cmd = { 0 };
-	unsigned char cdb[sim_devices[device->index].cdb_len];
-	unsigned char sense[sim_devices[device->index].sense_len];
+	uint8_t cdb[sim_devices[device->index].cdb_len];
+	uint8_t sense[sim_devices[device->index].sense_len];
 
 	if (device == NULL || recno == 0 || data == NULL || len <= 0)
 		return SCSISIM_INVALID_PARAM;
@@ -321,11 +322,11 @@ int scsisim_read_record(const struct sg_dev *device,
 	/* Set up the command block */
 	my_cmd.direction = SIM_READ;
 	my_cmd.cdb = cdb;
-	my_cmd.cdb_len = (unsigned char)sizeof(cdb);
+	my_cmd.cdb_len = (uint8_t)sizeof(cdb);
 	my_cmd.data = data;
 	my_cmd.data_len = len;
 	my_cmd.sense = sense;
-	my_cmd.sense_len = (unsigned char)sizeof(sense);
+	my_cmd.sense_len = (uint8_t)sizeof(sense);
 
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
@@ -348,16 +349,16 @@ int scsisim_read_record(const struct sg_dev *device,
  * For information about this function, see scsisim.h
  */
 int scsisim_read_binary(const struct sg_dev *device,
-			unsigned char *data,
-			unsigned short offset,
-			unsigned char len)
+			uint8_t *data,
+			uint16_t offset,
+			uint8_t len)
 {
 	int ret;
 	struct scsi_cmd my_cmd = { 0 };
-	unsigned char cdb[sim_devices[device->index].cdb_len];
-	unsigned char sense[sim_devices[device->index].sense_len];
+	uint8_t cdb[sim_devices[device->index].cdb_len];
+	uint8_t sense[sim_devices[device->index].sense_len];
 
-	if (device == NULL || data == NULL || offset > 0xffff || len <= 0)
+	if (device == NULL || data == NULL || len == 0)
 		return SCSISIM_INVALID_PARAM;
 
 	memset(sense, 0, sizeof(sense));
@@ -373,11 +374,11 @@ int scsisim_read_binary(const struct sg_dev *device,
 	/* Set up the command block */
 	my_cmd.direction = SIM_READ;
 	my_cmd.cdb = cdb;
-	my_cmd.cdb_len = (unsigned char)sizeof(cdb);
+	my_cmd.cdb_len = (uint8_t)sizeof(cdb);
 	my_cmd.data = data;
 	my_cmd.data_len = len;
 	my_cmd.sense = sense;
-	my_cmd.sense_len = (unsigned char)sizeof(sense);
+	my_cmd.sense_len = (uint8_t)sizeof(sense);
 
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
@@ -400,14 +401,14 @@ int scsisim_read_binary(const struct sg_dev *device,
  * For information about this function, see scsisim.h
  */
 int scsisim_update_record(const struct sg_dev *device,
-			  unsigned char recno,
-			  unsigned char *data,
-			  unsigned char len)
+			  uint8_t recno,
+			  uint8_t *data,
+			  uint8_t len)
 {
 	int ret;
 	struct scsi_cmd my_cmd = { 0 };
-	unsigned char cdb[sim_devices[device->index].cdb_len];
-	unsigned char sense[sim_devices[device->index].sense_len];
+	uint8_t cdb[sim_devices[device->index].cdb_len];
+	uint8_t sense[sim_devices[device->index].sense_len];
 
 	if (device == NULL || recno == 0 || data == NULL || len <= 0)
 		return SCSISIM_INVALID_PARAM;
@@ -424,11 +425,11 @@ int scsisim_update_record(const struct sg_dev *device,
 	/* Set up the command block */
 	my_cmd.direction = SIM_WRITE;
 	my_cmd.cdb = cdb;
-	my_cmd.cdb_len = (unsigned char)sizeof(cdb);
+	my_cmd.cdb_len = (uint8_t)sizeof(cdb);
 	my_cmd.data = data;
 	my_cmd.data_len = len;
 	my_cmd.sense = sense;
-	my_cmd.sense_len = (unsigned char)sizeof(sense);
+	my_cmd.sense_len = (uint8_t)sizeof(sense);
 
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
@@ -451,16 +452,16 @@ int scsisim_update_record(const struct sg_dev *device,
  * For information about this function, see scsisim.h
  */
 int scsisim_update_binary(const struct sg_dev *device,
-			  unsigned char *data,
-			  unsigned short offset,
-			  unsigned char len)
+			  uint8_t *data,
+			  uint16_t offset,
+			  uint8_t len)
 {
 	int ret;
 	struct scsi_cmd my_cmd = { 0 };
-	unsigned char cdb[sim_devices[device->index].cdb_len];
-	unsigned char sense[sim_devices[device->index].sense_len];
+	uint8_t cdb[sim_devices[device->index].cdb_len];
+	uint8_t sense[sim_devices[device->index].sense_len];
 
-	if (device == NULL || data == NULL || offset > 0xffff || len <= 0)
+	if (device == NULL || data == NULL || len == 0)
 		return SCSISIM_INVALID_PARAM;
 
 	memset(sense, 0, sizeof(sense));
@@ -476,11 +477,11 @@ int scsisim_update_binary(const struct sg_dev *device,
 	/* Set up the command block */
 	my_cmd.direction = SIM_WRITE;
 	my_cmd.cdb = cdb;
-	my_cmd.cdb_len = (unsigned char)sizeof(cdb);
+	my_cmd.cdb_len = (uint8_t)sizeof(cdb);
 	my_cmd.data = data;
 	my_cmd.data_len = len;
 	my_cmd.sense = sense;
-	my_cmd.sense_len = (unsigned char)sizeof(sense);
+	my_cmd.sense_len = (uint8_t)sizeof(sense);
 
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
@@ -503,14 +504,14 @@ int scsisim_update_binary(const struct sg_dev *device,
  * For information about this function, see scsisim.h
  */
 int scsisim_verify_chv(const struct sg_dev *device,
-		       unsigned char chv,
+		       uint8_t chv,
 		       const char *pin)
 {
 	int ret;
 	struct scsi_cmd my_cmd = { 0 };
-	unsigned char cdb[sim_devices[device->index].cdb_len];
-	unsigned char *data = NULL;
-	unsigned char sense[sim_devices[device->index].sense_len];
+	uint8_t cdb[sim_devices[device->index].cdb_len];
+	uint8_t *data = NULL;
+	uint8_t sense[sim_devices[device->index].sense_len];
 
 	if (device == NULL || pin == NULL)
 		return SCSISIM_INVALID_PARAM;
@@ -539,11 +540,11 @@ int scsisim_verify_chv(const struct sg_dev *device,
 	/* Set up the command block */
 	my_cmd.direction = SIM_WRITE;
 	my_cmd.cdb = cdb;
-	my_cmd.cdb_len = (unsigned char)sizeof(cdb);
+	my_cmd.cdb_len = (uint8_t)sizeof(cdb);
 	my_cmd.data = data;
 	my_cmd.data_len = GSM_CMD_VERIFY_CHV_DATA_LEN;
 	my_cmd.sense = sense;
-	my_cmd.sense_len = (unsigned char)sizeof(sense);
+	my_cmd.sense_len = (uint8_t)sizeof(sense);
 
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
@@ -561,18 +562,18 @@ int scsisim_verify_chv(const struct sg_dev *device,
  * For information about this function, see scsisim.h
  */
 int scsisim_send_raw_command(const struct sg_dev *device,
-			     unsigned char direction,
-			     unsigned char command,
-			     unsigned char P1,
-			     unsigned char P2,
-			     unsigned char P3,
-			     unsigned char *data,
+			     uint8_t direction,
+			     uint8_t command,
+			     uint8_t P1,
+			     uint8_t P2,
+			     uint8_t P3,
+			     uint8_t *data,
 			     unsigned int len)
 {
 	int ret;
 	struct scsi_cmd my_cmd = { 0 };
-	unsigned char cdb[sim_devices[device->index].cdb_len];
-	unsigned char sense[sim_devices[device->index].sense_len];
+	uint8_t cdb[sim_devices[device->index].cdb_len];
+	uint8_t sense[sim_devices[device->index].sense_len];
 
 	if (device == NULL)
 		return SCSISIM_INVALID_PARAM;
@@ -593,11 +594,11 @@ int scsisim_send_raw_command(const struct sg_dev *device,
 	/* Set up the command block */
 	my_cmd.direction = direction;
 	my_cmd.cdb = cdb;
-	my_cmd.cdb_len = (unsigned char)sizeof(cdb);
+	my_cmd.cdb_len = (uint8_t)sizeof(cdb);
 	my_cmd.data = data;
 	my_cmd.data_len = len;
 	my_cmd.sense = sense;
-	my_cmd.sense_len = (unsigned char)sizeof(sense);
+	my_cmd.sense_len = (uint8_t)sizeof(sense);
 
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
@@ -655,7 +656,7 @@ static inline void sim_free_device_name(struct sg_dev *device)
  * SCSISIM_GSM_* error code
  */
 static int sim_process_scsi_sense(const struct sg_dev *device,
-				  const unsigned char *sense,
+				  const uint8_t *sense,
 				  unsigned int len)
 {
 	int ret;

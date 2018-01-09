@@ -22,6 +22,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
@@ -62,7 +63,7 @@ static void print_usage_and_exit(void);
 int main(int argc, char *argv[])
 {
 	int ret, i, num_records;
-	unsigned char *tmp_buf, bin_buf[128] = { 0 };
+	uint8_t *tmp_buf, bin_buf[128] = { 0 };
 	char *tmp_str;
 	struct sg_dev device;		/* defined in scsisim.h */
 	struct GSM_response resp;	/* defined in scsisim.h */

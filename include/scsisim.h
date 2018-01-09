@@ -23,6 +23,7 @@
 #define __SCSISIM_H__
 
 #include <stdbool.h>
+#include <stdint.h>
 
 /* Global verbose output flag */
 extern bool scsisim_verbose;
@@ -142,32 +143,32 @@ struct sg_dev {
 /* Struct to hold fields for master file and directory files:
  * See GSM spec, 9.2.1 SELECT command*/
 struct GSM_MF_DF {
-	unsigned int file_memory;
-	unsigned int file_id;
-	unsigned char file_type;
-	unsigned char characteristics;
+	uint16_t file_memory;
+	uint16_t file_id;
+	uint8_t file_type;
+	uint8_t characteristics;
 	bool CHV1_enabled;
-	unsigned char df_children;
-	unsigned char ef_children;
-	unsigned char num_chvs;
+	uint8_t df_children;
+	uint8_t ef_children;
+	uint8_t num_chvs;
 	bool CHV1_initialized;
-	unsigned char CHV1_attempts_remaining;
-	unsigned char CHV1_unblock_attempts_remaining;
+	uint8_t CHV1_attempts_remaining;
+	uint8_t CHV1_unblock_attempts_remaining;
 	bool CHV2_initialized;
-	unsigned char CHV2_attempts_remaining;
-	unsigned char CHV2_unblock_attempts_remaining;
+	uint8_t CHV2_attempts_remaining;
+	uint8_t CHV2_unblock_attempts_remaining;
 };
 
 /* Struct to hold fields for elementary files: 
  * See GSM spec, 9.2.1 SELECT command */
 struct GSM_EF {
-	unsigned int file_size;
-	unsigned int file_id;
-	unsigned char file_type;
+	uint16_t file_size;
+	uint16_t file_id;
+	uint8_t file_type;
 	/*int access_conditions;*/	/* $TODO */
-	unsigned char status;
-	unsigned char structure;
-	unsigned char record_len;
+	uint8_t status;
+	uint8_t structure;
+	uint8_t record_len;
 };
 
 /* Struct to hold everything from a GSM GET RESPONSE
@@ -283,7 +284,7 @@ int scsisim_init_device(struct sg_dev *device);
  * Return value from sim_process_scsi_sense: number of bytes waiting in GET RESPONSE
  * SCSISIM_SCSI_NO_SENSE_DATA
  */
-int scsisim_select_file(const struct sg_dev *device, unsigned short file);
+int scsisim_select_file(const struct sg_dev *device, uint16_t file);
 
 
 /**
@@ -307,8 +308,8 @@ int scsisim_select_file(const struct sg_dev *device, unsigned short file);
  * Return value from sim_process_scsi_sense
  */
 int scsisim_get_response(const struct sg_dev *device,
-			 unsigned char *data,
-			 unsigned char len,
+			 uint8_t *data,
+			 uint8_t len,
 			 int command,
 			 struct GSM_response *resp);
 
@@ -336,9 +337,9 @@ int scsisim_get_response(const struct sg_dev *device,
  * Return value from scsisim_get_response
  */
 int scsisim_select_file_and_get_response(const struct sg_dev *device,
-					 unsigned short file,
-					 unsigned char *data,
-					 unsigned char len,
+					 uint16_t file,
+					 uint8_t *data,
+					 uint8_t len,
 					 int command,
 					 struct GSM_response *resp);
 
@@ -364,9 +365,9 @@ int scsisim_select_file_and_get_response(const struct sg_dev *device,
  * Return value from sim_process_scsi_sense
  */
 int scsisim_read_record(const struct sg_dev *device,
-			unsigned char recno,
-			unsigned char *data,
-			unsigned char len);
+			uint8_t recno,
+			uint8_t *data,
+			uint8_t len);
 
 
 /**
@@ -389,9 +390,9 @@ int scsisim_read_record(const struct sg_dev *device,
  * Return value from sim_process_scsi_sense
  */
 int scsisim_read_binary(const struct sg_dev *device,
-			unsigned char *data,
-			unsigned short offset,
-			unsigned char len);
+			uint8_t *data,
+			uint16_t offset,
+			uint8_t len);
 
 
 /**
@@ -415,9 +416,9 @@ int scsisim_read_binary(const struct sg_dev *device,
  * Return value from sim_process_scsi_sense
  */
 int scsisim_update_record(const struct sg_dev *device,
-			  unsigned char recno,
-			  unsigned char *data,
-			  unsigned char len);
+			  uint8_t recno,
+			  uint8_t *data,
+			  uint8_t len);
 
 
 /**
@@ -440,9 +441,9 @@ int scsisim_update_record(const struct sg_dev *device,
  * Return value from sim_process_scsi_sense
  */
 int scsisim_update_binary(const struct sg_dev *device,
-			  unsigned char *data,
-			  unsigned short offset,
-			  unsigned char len);
+			  uint8_t *data,
+			  uint16_t offset,
+			  uint8_t len);
 
 
 /**
@@ -468,7 +469,7 @@ int scsisim_update_binary(const struct sg_dev *device,
  * Return value from sim_process_scsi_sense
  */
 int scsisim_verify_chv(const struct sg_dev *device,
-		       unsigned char chv,
+		       uint8_t chv,
 		       const char *pin);
 
 
@@ -498,12 +499,12 @@ int scsisim_verify_chv(const struct sg_dev *device,
  * Return value from sim_process_scsi_sense
  */
 int scsisim_send_raw_command(const struct sg_dev *device,
-			     unsigned char direction,
-			     unsigned char command,
-			     unsigned char P1,
-			     unsigned char P2,
-			     unsigned char P3,
-			     unsigned char *data,
+			     uint8_t direction,
+			     uint8_t command,
+			     uint8_t P1,
+			     uint8_t P2,
+			     uint8_t P3,
+			     uint8_t *data,
 			     unsigned int len);
 
 
@@ -531,7 +532,7 @@ int scsisim_send_raw_command(const struct sg_dev *device,
  * SCSISIM_MEMORY_ALLOCATION_ERROR
  * SCSISIM_SMS_INVALID_ADDRESS
  */
-int scsisim_parse_sms(const unsigned char *record, unsigned char record_len);
+int scsisim_parse_sms(const uint8_t *record, uint8_t record_len);
 
 
 /**
@@ -551,7 +552,7 @@ int scsisim_parse_sms(const unsigned char *record, unsigned char record_len);
  * SCSISIM_GSM_INVALID_ADN_RECORD
  * SCSISIM_MEMORY_ALLOCATION_ERROR
  */
-int scsisim_parse_adn(const unsigned char *record, unsigned char record_len);
+int scsisim_parse_adn(const uint8_t *record, uint8_t record_len);
 
 
 /**
@@ -569,7 +570,7 @@ int scsisim_parse_adn(const unsigned char *record, unsigned char record_len);
  * Return value: 
  * Pointer to null-terminated string. Caller's responsibility to free buffer when done.
  */
-char *scsisim_map_gsm_chars(const unsigned char *src, unsigned int src_len);
+char *scsisim_map_gsm_chars(const uint8_t *src, unsigned int src_len);
 
 
 /**
@@ -587,7 +588,7 @@ char *scsisim_map_gsm_chars(const unsigned char *src, unsigned int src_len);
  * Return value: 
  * Pointer to unpacked, null-terminated string. Caller's responsibility to free buffer when done.
  */
-char *scsisim_get_gsm_text(const unsigned char *packed,
+char *scsisim_get_gsm_text(const uint8_t *packed,
 			   unsigned int packed_len,
 			   unsigned int num_septets);
 
@@ -608,7 +609,7 @@ char *scsisim_get_gsm_text(const unsigned char *packed,
  * Return value: 
  * Pointer to ASCII buffer. Caller's responsibility to free buffer when done.
  */
-char *scsisim_packed_bcd_to_ascii(const unsigned char *bcd,
+char *scsisim_packed_bcd_to_ascii(const uint8_t *bcd,
 				  const unsigned int len,
 				  bool little_endian,
 				  bool strip_sign_flag,
@@ -633,9 +634,9 @@ char *scsisim_packed_bcd_to_ascii(const unsigned char *bcd,
  * None
  */
 void scsisim_unpack_septets(const unsigned int num_septets,
-			    const unsigned char *packed,
+			    const uint8_t *packed,
 			    const unsigned int packed_len,
-			    unsigned char **unpacked,
+			    uint8_t **unpacked,
 			    unsigned int *unpacked_len);
 
 
