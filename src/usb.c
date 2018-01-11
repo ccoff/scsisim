@@ -71,7 +71,7 @@ int usb_get_vendor_product(const struct sg_dev *device,
 		 SYSFS_SG_BASE_PATH,
 		 device->name);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 		scsisim_pinfo("%s: ready to change directory to %s",
 			      __func__, sysfs_sg_full_path);
 
@@ -81,14 +81,14 @@ int usb_get_vendor_product(const struct sg_dev *device,
 
 	if (ret)
 	{
-		if (scsisim_verbose)
+		if (scsisim_verbose())
 			scsisim_pinfo("%s: changing to %s failed",
 				      __func__, sysfs_sg_full_path);
 
 		return(SCSISIM_SYSFS_CHDIR_FAILED);
 	}
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 		scsisim_pinfo("%s: current directory is %s",
 			      __func__, getcwd(cwd, PATH_MAX));
 
@@ -101,7 +101,7 @@ int usb_get_vendor_product(const struct sg_dev *device,
 		return(SCSISIM_SYSFS_CHDIR_FAILED);
 	}
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 		scsisim_pinfo("%s: current directory is %s",
 			      __func__, getcwd(cwd, PATH_MAX));
 
@@ -114,7 +114,7 @@ int usb_get_vendor_product(const struct sg_dev *device,
 	fscanf(fpVendor, "%x", vendor);
 	fclose(fpVendor);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 		scsisim_pinfo("%s: device vendor is %x", __func__, *vendor);
 
 	/* Get the USB product ID */
@@ -126,7 +126,7 @@ int usb_get_vendor_product(const struct sg_dev *device,
 	fscanf(fpProduct, "%x", product);
 	fclose(fpProduct);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 		scsisim_pinfo("%s: device product is %x", __func__, *product);
 
 	return SCSISIM_SUCCESS;
@@ -166,7 +166,7 @@ bool usb_is_device_supported(struct sg_dev *device,
 			/* We have a match */
 			device->index = supported_devices[i][DEVICE_INDEX];
 
-			if (scsisim_verbose)
+			if (scsisim_verbose())
 				scsisim_pinfo("%s: device vendor/product is supported", __func__);
 
 			return true;

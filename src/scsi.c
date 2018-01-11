@@ -73,7 +73,7 @@ int scsi_send_cdb(const struct sg_dev *device, struct scsi_cmd *my_cmd)
 	io_hdr.mx_sb_len = my_cmd->sense_len;
 
 	/* Print some debug info if requested: */
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 	{
 		scsisim_pinfo("%s: >>> SENDING COMMAND >>>", __func__);
 		print_binary_buffer(io_hdr.cmdp, io_hdr.cmd_len);
@@ -95,7 +95,7 @@ int scsi_send_cdb(const struct sg_dev *device, struct scsi_cmd *my_cmd)
 	}
 
 	/* Print a whole bunch more debug info if requested: */
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 	{
 		scsisim_pinfo("%s: io_hdr.status = %d",
 			      __func__, io_hdr.status);

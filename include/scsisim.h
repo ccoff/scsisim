@@ -25,9 +25,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-/* Global verbose output flag */
-extern bool scsisim_verbose;
-
 /* API return values -- general */
 #define SCSISIM_SUCCESS				 0
 #define SCSISIM_DEVICE_OPEN_FAILED		-1
@@ -706,6 +703,48 @@ void scsisim_pinfo(const char* format, ...);
  * None
  */
 void scsisim_printf(const char* format, ...);
+
+/**
+ * Function: scsisim_verbose
+ *
+ * Parameters:
+ * None
+ *
+ * Description: 
+ * Determine if verbose output is enabled.
+ *
+ * Return values: 
+ * true if verbose output is enabled, false otherwise.
+ */
+bool scsisim_verbose(void);
+
+/**
+ * Function: scsisim_verbose_enable
+ *
+ * Parameters:
+ * None
+ *
+ * Description: 
+ * Enable verbose output. Note that this results in A LOT of program output.
+ *
+ * Return values: 
+ * None
+ */
+void scsisim_verbose_enable(void);
+
+/**
+ * Function: scsisim_verbose_disable
+ *
+ * Parameters:
+ * None
+ *
+ * Description: 
+ * Disable verbose output.
+ *
+ * Return values: 
+ * None
+ */
+void scsisim_verbose_disable(void);
 
 
 #endif /* __SCSISIM_H__ */

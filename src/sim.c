@@ -62,7 +62,7 @@ int scsisim_open_device(const char *dev_name, struct sg_dev *device)
 
 	snprintf(full_path, PATH_MAX, "/dev/%s", device->name);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 		scsisim_pinfo("%s: ready to open %s", __func__, full_path);
 
 	/* Try to open device */
@@ -71,7 +71,7 @@ int scsisim_open_device(const char *dev_name, struct sg_dev *device)
 	if (device->fd > 0)
 	{
 		/* We have a valid file descriptor */
-		if (scsisim_verbose)
+		if (scsisim_verbose())
 			scsisim_pinfo("%s: device opened, fd = %d, name = %s",
 				      __func__, device->fd, device->name);
 
@@ -105,7 +105,7 @@ int scsisim_close_device(struct sg_dev *device)
 			ret = SCSISIM_DEVICE_CLOSE_FAILED;
 		else
 		{
-			if (scsisim_verbose)
+			if (scsisim_verbose())
 				scsisim_pinfo("%s: device closed", __func__);
 
 			device->fd = 0;
@@ -251,7 +251,7 @@ int scsisim_get_response(const struct sg_dev *device,
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 	{
 		if (my_cmd.data_xfered != len)
 			scsisim_pinfo("%s: bytes transferred (%d) is less than data buffer length (%d)",
@@ -331,7 +331,7 @@ int scsisim_read_record(const struct sg_dev *device,
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 	{
 		if (my_cmd.data_xfered != len)
 			scsisim_pinfo("%s: bytes transferred (%d) is less than data buffer length (%d)",
@@ -383,7 +383,7 @@ int scsisim_read_binary(const struct sg_dev *device,
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 	{
 		if (my_cmd.data_xfered != len)
 			scsisim_pinfo("%s: bytes transferred (%d) is less than data buffer length (%d)",
@@ -434,7 +434,7 @@ int scsisim_update_record(const struct sg_dev *device,
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 	{
 		if (my_cmd.data_xfered != len)
 			scsisim_pinfo("%s: bytes transferred (%d) is less than data buffer length (%d)",
@@ -486,7 +486,7 @@ int scsisim_update_binary(const struct sg_dev *device,
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 	{
 		if (my_cmd.data_xfered != len)
 			scsisim_pinfo("%s: bytes transferred (%d) is less than data buffer length (%d)",
@@ -603,7 +603,7 @@ int scsisim_send_raw_command(const struct sg_dev *device,
 	/* Send the command */
 	ret = scsi_send_cdb(device, &my_cmd);
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 	{
 		if (my_cmd.data_xfered != len)
 			scsisim_pinfo("%s: bytes transferred (%d) is less than data buffer length (%d)",
@@ -779,7 +779,7 @@ static int sim_process_scsi_sense(const struct sg_dev *device,
 			ret = sense[sim_devices[device->index].sense_ascq_offset];
 			break;
 		default:
-			if (scsisim_verbose)
+			if (scsisim_verbose())
 				scsisim_pinfo("%s: unknown GSM Status Word 1 (%d); Status Word 2 = %d",
 				      __func__,
 				      sense[sim_devices[device->index].sense_asc_offset],
@@ -788,7 +788,7 @@ static int sim_process_scsi_sense(const struct sg_dev *device,
 			break;
 	}
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 	{
 		if (ret <= 0)
 			scsisim_pinfo("%s: returning %d (%s)", __func__, ret, scsisim_strerror(ret));

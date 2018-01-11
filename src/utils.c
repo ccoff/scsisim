@@ -34,7 +34,7 @@
 
 #define MAX_STRERROR	128
 
-bool scsisim_verbose = false;
+static bool verbose_output = false;
 
 static const char BCD_basic_digits[]="0123456789abcdef";
 static const char BCD_telecom_digits[]="0123456789*#,--f";
@@ -208,7 +208,7 @@ void scsisim_unpack_septets(const unsigned int num_septets,
 
 	ptr = *unpacked;
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 		scsisim_pinfo("%s: unpacked_len = %d septets",
 			      __func__, *unpacked_len);
 
@@ -246,7 +246,7 @@ void scsisim_unpack_septets(const unsigned int num_septets,
 	 * may now be an extra 'unpacked' character -- if so, remove it: */
 	if (*unpacked_len > num_septets)
 	{
-		if (scsisim_verbose)
+		if (scsisim_verbose())
 			scsisim_pinfo("%s: fixing mismatch between unpacked_len (%d) and num_septets (%d)",
 				      __func__, *unpacked_len, num_septets);
 
@@ -339,6 +339,30 @@ void scsisim_printf(const char* format, ...)
 	va_start(args, format);
 	vfprintf(stdout, format, args);
 	va_end(args);
+}
+
+/**
+ * For information about this function, see scsisim.h
+ */
+bool scsisim_verbose(void)
+{
+    return verbose_output;
+}
+
+/**
+ * For information about this function, see scsisim.h
+ */
+void scsisim_verbose_enable(void)
+{
+    verbose_output = true;
+}
+
+/**
+ * For information about this function, see scsisim.h
+ */
+void scsisim_verbose_disable(void)
+{
+    verbose_output = false;
 }
 
 /* EOF */

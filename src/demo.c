@@ -356,7 +356,7 @@ static void parse_cmd_opts (int argc, char *argv[])
 				break;
 
 			case 'v':
-				scsisim_verbose = true;
+				scsisim_verbose_enable();
 				break;
 
 			case '?':

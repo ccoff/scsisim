@@ -146,7 +146,7 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 
 	if (ptr == NULL || record_len != GSM_SMS_RECORD_LEN)
 	{
-		if (scsisim_verbose)
+		if (scsisim_verbose())
 			scsisim_pinfo("%s: Invalid SMS record or length (%d bytes)",
 				      __func__, record_len);
 		return SCSISIM_INVALID_PARAM;
@@ -159,7 +159,7 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 	/* Get SMS status */
 	if (*ptr > sizeof(GSM_sms_status) / sizeof(GSM_sms_status[0]) - 1)
 	{
-		if (scsisim_verbose)
+		if (scsisim_verbose())
 			scsisim_pinfo("%s: Invalid SMS status %d",
 				      __func__, *ptr);
 		return SCSISIM_SMS_INVALID_STATUS;
@@ -171,7 +171,7 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 	 * ignore */
 	smsc_len = *ptr++ - 1;
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 		scsisim_pinfo("%s: SMS Center length is %d bytes",
 			      __func__, smsc_len);
 
@@ -179,7 +179,7 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 	{
 		/* The entire record is probably free space or invalid, but
 		   we'll press on a bit more to make sure */
-		if (scsisim_verbose)
+		if (scsisim_verbose())
 			scsisim_pinfo("%s: Invalid SMS Center length - forcing to %d bytes",
 				      __func__, GSM_MAX_SMSC_LEN);
 
@@ -192,7 +192,7 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 	/* Determine if SMSC number contains valid data */
 	if ( *ptr == 0xff )
 	{
-		if (scsisim_verbose)
+		if (scsisim_verbose())
 			scsisim_pinfo("%s: Invalid SMS Center number - aborting parsing for this record",
 				      __func__);
 
@@ -232,13 +232,13 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 			if (address_len < GSM_MIN_ADDRESS_LEN ||
 			    address_len > GSM_MAX_ADDRESS_LEN)
 			{
-				if (scsisim_verbose)
+				if (scsisim_verbose())
 					scsisim_pinfo("%s: Invalid address length (%d bytes)",
 						      __func__, address_len);
 				return SCSISIM_SMS_INVALID_ADDRESS;
 			}
 
-			if (scsisim_verbose)
+			if (scsisim_verbose())
 				scsisim_pinfo("%s: Valid address length (%d bytes)",
 					      __func__, address_len);
 
@@ -357,7 +357,7 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 			bytes_used = ptr - record;
 			bytes_remaining = GSM_SMS_RECORD_LEN - bytes_used;
 
-			if (scsisim_verbose)
+			if (scsisim_verbose())
 				scsisim_pinfo("%s: Currently at offset %d in record. %d bytes remaining.",
 					      __func__,bytes_used, bytes_remaining);
 
@@ -380,7 +380,7 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 			}
 			else
 			{
-				if (scsisim_verbose)
+				if (scsisim_verbose())
 					scsisim_pinfo("%s: TP-UD has %d septets packed into %d bytes",
 						      __func__, num_septets, msg_len);
 			}
@@ -397,7 +397,7 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 			switch (charset)
 			{
 				case 0:		/* 7-bit GSM alphabet */
-					if (scsisim_verbose)
+					if (scsisim_verbose())
 						scsisim_pinfo("%s: Using 7-bit GSM character set",
 							      __func__);
 
@@ -413,7 +413,7 @@ int scsisim_parse_sms(const uint8_t *record, uint8_t record_len)
 				default:
 					scsisim_printf("Message: [Unsupported character set]\n");
 
-					if (scsisim_verbose)
+					if (scsisim_verbose())
 						scsisim_pinfo("%s: Character set code %d unsupported",
 							      __func__, charset);
 					break;
@@ -489,7 +489,7 @@ char *scsisim_map_gsm_chars(const uint8_t *src, unsigned int src_len)
 		if (src[i] > 0x7f)
 		{
 			/* 0xff marks unused bytes, and isn't really "invalid", so: */
-			if (scsisim_verbose && src[i] != 0xff)
+			if (scsisim_verbose() && src[i] != 0xff)
 				scsisim_pinfo("%s: Invalid GSM character code (%d), %d unmapped characters remaining",
 					      __func__, src[i], src_len - i);
 			break;
@@ -656,7 +656,7 @@ int gsm_parse_response(const uint8_t *response,
 			break;
 	}
 
-	if (scsisim_verbose)
+	if (scsisim_verbose())
 		dump_gsm_response(resp);
 
 	return ret;
