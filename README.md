@@ -14,6 +14,78 @@ For the record, here is what `lsusb` reports for the "APM UR-200" USB SIM card r
 
 `ID 0420:1307 Chips and Technologies Celly SIM Card Reader`
 
+## Sample output
+
+Here is some output from the demonstration program (with sanitized numbers). This was run on an Orange France SIM card:
+
+<details><summary>Sample output</summary>
+<p>
+
+```
+chris@deb:~/scsisim$ build/demo sg3 -p 1234
+PIN enabled on card; 3 attempts remaining
+Do you want to send PIN 1234 to the card? [y/n] y
+[INFO: PIN verification successful.]
+ICCID = 8933015XXXXXXXXXXXXX
+SPN = Orange F
+====================
+ADN record #1
+Contact name:   Maison
+Contact number: 0172XXXXXX
+====================
+ADN record #2
+Contact name:   Mike
+Contact number: 0620XXXXXX
+====================
+ADN record #3
+Contact name:   Balance
+Contact number: #123#
+====================
+
+[Output truncated for brevity]
+
+====================
+ADN record #249
+ADN record unused
+====================
+ADN record #250
+ADN record unused
+====================
+SMS record #1
+Status: Message received and read
+SMSC:   31654XXXXXXX
+Sender: 3364XXXXXXX
+Date:   05/02/2011
+Time:   21:31:18
+Timezone: 00
+Message: Mostly. Gonna stay a bit longer
+====================
+SMS record #2
+Status: Message received and read
+SMSC:   33689004000
+Sender: 20220
+Date:   11/08/2010
+Time:   08:14:31
+Timezone: 64
+Message: Orange Info : voici les mots clés disponibles INFO, METEO, SPORT, FOOT, RUGBY, TV, LOTO, QUINTE, BLAGUE, BOURSE, HOROSCOPE
+====================
+
+[Output truncated for brevity]
+
+====================
+SMS record #49
+Status:	Unused space
+[ERROR: SMS record parse failed: Invalid SMS Center number]
+====================
+SMS record #50
+Status:	Unused space
+[ERROR: SMS record parse failed: Invalid SMS Center number]
+chris@deb:~/scsisim$ 
+```
+
+</p>
+</details>
+
 ## How to build
 
 Assuming `gcc` and `make` are installed on your system, building everything is as easy as running `make` from the project root directory. The makefile builds the following in the **build** subdirectory:
