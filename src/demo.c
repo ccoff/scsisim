@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 	int ret, i, num_records;
 	uint8_t *tmp_buf, bin_buf[128] = { 0 };
 	char *tmp_str;
-	struct sg_dev device;		/* defined in scsisim.h */
+	struct scsisim_dev device;		/* defined in scsisim.h */
 	struct GSM_response resp;	/* defined in scsisim.h */
 
 	/* Process command-line arguments. */
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 							GSM_FILE_MF,
 							bin_buf,
 							sizeof(bin_buf),
-							SELECT_MF_DF,
+							SIM_SELECT_MF_DF,
 							&resp)) != SCSISIM_SUCCESS)
 	{
 		scsisim_perror("Select MF failed", ret);
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
 							GSM_FILE_EF_ICCID,
 							bin_buf,
 							sizeof(bin_buf),
-							SELECT_EF,
+							SIM_SELECT_EF,
 							&resp)) == SCSISIM_SUCCESS)
 	{
 		/* Read the raw binary data in the ICCID file */
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
 							GSM_FILE_DF_GSM,
 							bin_buf,
 							sizeof(bin_buf),
-							SELECT_MF_DF,
+							SIM_SELECT_MF_DF,
 							&resp)) != SCSISIM_SUCCESS)
 	{
 		scsisim_perror("Select DF-GSM failed", ret);
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 							GSM_FILE_EF_SPN,
 							bin_buf,
 							sizeof(bin_buf),
-							SELECT_EF,
+							SIM_SELECT_EF,
 							&resp)) == SCSISIM_SUCCESS)
 	{
 		/* Read the raw binary data in the SPN file */
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 							GSM_FILE_MF,
 							bin_buf,
 							sizeof(bin_buf),
-							SELECT_MF_DF,
+							SIM_SELECT_MF_DF,
 							&resp)) != SCSISIM_SUCCESS)
 	{
 		scsisim_perror("Select MF failed", ret);
@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
 							GSM_FILE_DF_TELECOM,
 							bin_buf,
 							sizeof(bin_buf),
-							SELECT_MF_DF,
+							SIM_SELECT_MF_DF,
 							&resp)) != SCSISIM_SUCCESS)
 	{
 		scsisim_perror("Select DF-TELECOM failed", ret);
@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 							GSM_FILE_EF_ADN,
 							bin_buf,
 							sizeof(bin_buf),
-							SELECT_EF,
+							SIM_SELECT_EF,
 							&resp)) == SCSISIM_SUCCESS)
 	{
 		/* Allocate space for an ADN record based on its size on the
@@ -288,7 +288,7 @@ int main(int argc, char *argv[])
 							GSM_FILE_EF_SMS,
 							bin_buf,
 							sizeof(bin_buf),
-							SELECT_EF,
+							SIM_SELECT_EF,
 							&resp)) == SCSISIM_SUCCESS)
 	{
 		/* Allocate space for an SMS record based on its size on the

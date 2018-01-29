@@ -35,11 +35,11 @@ static inline void scsi_init_io_hdr(struct sg_io_hdr *io_hdr);
  * Function: scsi_send_cdb
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * my_cmd:	Pointer to scsi_cmd struct.
  *
  * Description: 
- * Given a pointer to an sg_dev struct, set up the SCSI generic
+ * Given a pointer to an scsisim_dev struct, set up the SCSI generic
  * sg_io_hdr struct with the settings passed in the scsi_cmd struct.
  * Then do the actual ioctl() on the device to send the CDB (command
  * data block).
@@ -48,7 +48,7 @@ static inline void scsi_init_io_hdr(struct sg_io_hdr *io_hdr);
  * SCSISIM_SCSI_SEND_ERROR
  * SCSISIM_SUCCESS
  */
-int scsi_send_cdb(const struct sg_dev *device, struct scsi_cmd *my_cmd)
+int scsi_send_cdb(const struct scsisim_dev *device, struct scsi_cmd *my_cmd)
 {
 	int ret = SCSISIM_SCSI_SEND_ERROR;
 	struct sg_io_hdr io_hdr;

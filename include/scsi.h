@@ -41,7 +41,7 @@ struct scsi_cmd {
 	uint8_t sense_xfered;
 };
 
-int scsi_send_cdb(const struct sg_dev *device, struct scsi_cmd *my_cmd);
+int scsi_send_cdb(const struct scsisim_dev *device, struct scsi_cmd *my_cmd);
 
 #endif  /* __SCSISIM_SCSI_H__ */
 

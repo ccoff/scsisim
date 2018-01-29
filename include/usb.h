@@ -27,11 +27,11 @@
 
 #define SYSFS_SG_BASE_PATH	"/sys/class/scsi_generic"
 
-int usb_get_vendor_product(const struct sg_dev *device,
+int usb_get_vendor_product(const struct scsisim_dev *device,
 			   unsigned int *vendor,
 			   unsigned int *product);
 
-bool usb_is_device_supported(struct sg_dev *device,
+bool usb_is_device_supported(struct scsisim_dev *device,
 			     unsigned int vendor,
 			     unsigned int product,
 			     const unsigned int supported_devices[][3]);

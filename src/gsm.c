@@ -611,13 +611,13 @@ int gsm_parse_response(const uint8_t *response,
 	int ret = SCSISIM_SUCCESS;
 
 	if (response == NULL ||
-	    (resp->command == SELECT_EF && response_len < GSM_MIN_EF_RESPONSE_LEN) ||
-	    (resp->command == SELECT_MF_DF && response_len < GSM_MIN_MF_DF_RESPONSE_LEN))
+	    (resp->command == SIM_SELECT_EF && response_len < GSM_MIN_EF_RESPONSE_LEN) ||
+	    (resp->command == SIM_SELECT_MF_DF && response_len < GSM_MIN_MF_DF_RESPONSE_LEN))
 		return SCSISIM_INVALID_GSM_RESPONSE;
 
 	switch (resp->command)
 	{
-		case SELECT_EF:
+		case SIM_SELECT_EF:
 			/* Bytes 0-1: Reserved for future use */
 			resp->type.ef.file_size = response[2] << 8;
 			resp->type.ef.file_size |= response[3];
@@ -631,7 +631,7 @@ int gsm_parse_response(const uint8_t *response,
 			resp->type.ef.record_len = response[14];
 			break;
 
-		case SELECT_MF_DF:
+		case SIM_SELECT_MF_DF:
 			/* Bytes 0-1: Reserved for future use */
 			resp->type.mf_df.file_memory = response[2] << 8;
 			resp->type.mf_df.file_memory |= response[3];
@@ -679,7 +679,7 @@ static void dump_gsm_response(const struct GSM_response *resp)
 {
 	switch (resp->command)
 	{
-		case SELECT_EF:
+		case SIM_SELECT_EF:
 			scsisim_pinfo("====== GSM EF Response Data ======");
 			scsisim_pinfo("ID: %x",
 				      resp->type.ef.file_id);
@@ -696,7 +696,7 @@ static void dump_gsm_response(const struct GSM_response *resp)
 			scsisim_pinfo("======== End Response Data =======");
 			break;
 
-		case SELECT_MF_DF:
+		case SIM_SELECT_MF_DF:
 			scsisim_pinfo("===== GSM MF/DF Response Data ====");
 			scsisim_pinfo("ID: %x",
 				      resp->type.mf_df.file_id);

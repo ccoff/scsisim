@@ -39,12 +39,12 @@
  * Function: usb_get_vendor_product
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * vendor:	(Output) USB vendor number.
  * product:	(Output) USB product number.
  *
  * Description: 
- * Given a pointer to an sg_dev struct, traverse the sysfs directory
+ * Given a pointer to an scsisim_dev struct, traverse the sysfs directory
  * structure for the associated device name to obtain the USB vendor 
  * and product numbers.
  *
@@ -54,7 +54,7 @@
  * SCSISIM_USB_PRODUCT_OPEN_FAILED
  * SCSISIM_SUCCESS
  */
-int usb_get_vendor_product(const struct sg_dev *device,
+int usb_get_vendor_product(const struct scsisim_dev *device,
 			   unsigned int *vendor,
 			   unsigned int *product)
 {
@@ -136,7 +136,7 @@ int usb_get_vendor_product(const struct sg_dev *device,
  * Function: usb_is_device_supported
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * vendor:	(Output) USB vendor number.
  * product:	(Output) USB product number.
  * supported_devices: Array of supported USB devices organized by 
@@ -145,13 +145,13 @@ int usb_get_vendor_product(const struct sg_dev *device,
  * Description: 
  * Given a USB vendor and product number, determine if it is in the
  * list of supported USB devices. If so, set the device index in
- * sg_dev struct so it knows which definitions in device.h to reference.
+ * scsisim_dev struct so it knows which definitions in device.h to reference.
  *
  * Return values: 
  * true - The specified device is supported.
  * false - The specified device is not supported.
  */
-bool usb_is_device_supported(struct sg_dev *device,
+bool usb_is_device_supported(struct scsisim_dev *device,
 			     unsigned int vendor,
 			     unsigned int product,
 			     const unsigned int supported_devices[][3])

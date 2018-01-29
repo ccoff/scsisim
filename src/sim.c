@@ -35,17 +35,17 @@
 #include "usb.h"
 #include "utils.h"
 
-static int sim_process_scsi_sense(const struct sg_dev *device,
+static int sim_process_scsi_sense(const struct scsisim_dev *device,
 				  const uint8_t *sense,
 				  unsigned int len);
 
-static inline void sim_free_device_name(struct sg_dev *device);
+static inline void sim_free_device_name(struct scsisim_dev *device);
 
 
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_open_device(const char *dev_name, struct sg_dev *device)
+int scsisim_open_device(const char *dev_name, struct scsisim_dev *device)
 {
 	int ret;
 	char full_path[PATH_MAX];
@@ -90,7 +90,7 @@ int scsisim_open_device(const char *dev_name, struct sg_dev *device)
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_close_device(struct sg_dev *device)
+int scsisim_close_device(struct scsisim_dev *device)
 {
 	int ret;
 
@@ -122,7 +122,7 @@ int scsisim_close_device(struct sg_dev *device)
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_init_device(struct sg_dev *device)
+int scsisim_init_device(struct scsisim_dev *device)
 {
 	int ret, i;
 	unsigned int idVendor, idProduct;
@@ -167,7 +167,7 @@ int scsisim_init_device(struct sg_dev *device)
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_select_file(const struct sg_dev *device, uint16_t file)
+int scsisim_select_file(const struct scsisim_dev *device, uint16_t file)
 {
 	int ret;
 	struct scsi_cmd my_cmd = { 0 };
@@ -215,7 +215,7 @@ int scsisim_select_file(const struct sg_dev *device, uint16_t file)
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_get_response(const struct sg_dev *device,
+int scsisim_get_response(const struct scsisim_dev *device,
 			 uint8_t *data,
 			 uint8_t len,
 			 int command,
@@ -277,7 +277,7 @@ int scsisim_get_response(const struct sg_dev *device,
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_select_file_and_get_response(const struct sg_dev *device,
+int scsisim_select_file_and_get_response(const struct scsisim_dev *device,
 					 uint16_t file,
 					 uint8_t *data,
 					 uint8_t len,
@@ -297,7 +297,7 @@ int scsisim_select_file_and_get_response(const struct sg_dev *device,
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_read_record(const struct sg_dev *device,
+int scsisim_read_record(const struct scsisim_dev *device,
 			uint8_t recno,
 			uint8_t *data,
 			uint8_t len)
@@ -348,7 +348,7 @@ int scsisim_read_record(const struct sg_dev *device,
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_read_binary(const struct sg_dev *device,
+int scsisim_read_binary(const struct scsisim_dev *device,
 			uint8_t *data,
 			uint16_t offset,
 			uint8_t len)
@@ -400,7 +400,7 @@ int scsisim_read_binary(const struct sg_dev *device,
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_update_record(const struct sg_dev *device,
+int scsisim_update_record(const struct scsisim_dev *device,
 			  uint8_t recno,
 			  uint8_t *data,
 			  uint8_t len)
@@ -451,7 +451,7 @@ int scsisim_update_record(const struct sg_dev *device,
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_update_binary(const struct sg_dev *device,
+int scsisim_update_binary(const struct scsisim_dev *device,
 			  uint8_t *data,
 			  uint16_t offset,
 			  uint8_t len)
@@ -503,7 +503,7 @@ int scsisim_update_binary(const struct sg_dev *device,
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_verify_chv(const struct sg_dev *device,
+int scsisim_verify_chv(const struct scsisim_dev *device,
 		       uint8_t chv,
 		       const char *pin)
 {
@@ -561,7 +561,7 @@ int scsisim_verify_chv(const struct sg_dev *device,
 /**
  * For information about this function, see scsisim.h
  */
-int scsisim_send_raw_command(const struct sg_dev *device,
+int scsisim_send_raw_command(const struct scsisim_dev *device,
 			     uint8_t direction,
 			     uint8_t command,
 			     uint8_t P1,
@@ -621,16 +621,16 @@ int scsisim_send_raw_command(const struct sg_dev *device,
  * Function: sim_free_device_name
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  *
  * Description: 
- * Given a pointer to an sg_dev struct, this function does all of the
+ * Given a pointer to an scsisim_dev struct, this function does all of the
  * necessary memory cleanup.
  *
  * Return values: 
  * None
  */
-static inline void sim_free_device_name(struct sg_dev *device)
+static inline void sim_free_device_name(struct scsisim_dev *device)
 {
 	free(device->name);
 	device->name = NULL;
@@ -640,7 +640,7 @@ static inline void sim_free_device_name(struct sg_dev *device)
  * Function: sim_process_scsi_sense
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * sense:	Sense buffer.
  * len:		Length of sense buffer.
  *
@@ -655,7 +655,7 @@ static inline void sim_free_device_name(struct sg_dev *device)
  * Number of bytes in response data
  * SCSISIM_GSM_* error code
  */
-static int sim_process_scsi_sense(const struct sg_dev *device,
+static int sim_process_scsi_sense(const struct scsisim_dev *device,
 				  const uint8_t *sense,
 				  unsigned int len)
 {

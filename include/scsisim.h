@@ -131,7 +131,7 @@
 
 
 /* Struct to hold SCSI generic device */
-struct sg_dev {
+struct scsisim_dev {
 	int fd;			/* File descriptor */
 	unsigned int index;	/* Index into sim_devices[] in device.h */
 	char *name;		/* Name, such as "sg3" */
@@ -181,12 +181,12 @@ struct GSM_response {
 
 /* GET RESPONSE command constants */
 enum {
-	SELECT_EF = 1,
-	SELECT_MF_DF,
-	RUN_GSM_ALGORITHM,	/* $TODO */
-	SEEK,			/* $TODO */
-	INCREASE,		/* $TODO */
-	ENVELOPE		/* $TODO */
+	SIM_SELECT_EF = 1,
+	SIM_SELECT_MF_DF,
+	SIM_RUN_GSM_ALGORITHM,	/* $TODO */
+	SIM_SEEK,			/* $TODO */
+	SIM_INCREASE,		/* $TODO */
+	SIM_ENVELOPE		/* $TODO */
 };
 
 /* SCSI direction constants */
@@ -202,7 +202,7 @@ enum {
  *
  * Parameters:
  * dev_name:	Name of SCSI generic device to open, e.g., 'sg1'.
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  *
  * Description: 
  * Given the name of a SCSI generic device (e.g., 'sg3'), this function 
@@ -218,17 +218,17 @@ enum {
  * SCSISIM_MEMORY_ALLOCATION_ERROR
  * SCSISIM_DEVICE_OPEN_FAILED
  */
-int scsisim_open_device(const char *dev_name, struct sg_dev *device);
+int scsisim_open_device(const char *dev_name, struct scsisim_dev *device);
 
 
 /**
  * Function: scsisim_close_device
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  *
  * Description: 
- * Given a pointer to an sg_dev struct, this function closes the file 
+ * Given a pointer to an scsisim_dev struct, this function closes the file 
  * descriptor to the associated device file and does other cleanup.
  *
  * Return values: 
@@ -237,17 +237,17 @@ int scsisim_open_device(const char *dev_name, struct sg_dev *device);
  * SCSISIM_DEVICE_CLOSE_FAILED
  * SCSISIM_INVALID_FILE_DESCRIPTOR
  */
-int scsisim_close_device(struct sg_dev *device);
+int scsisim_close_device(struct scsisim_dev *device);
 
 
 /**
  * Function: scsisim_init_device
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  *
  * Description: 
- * Given a pointer to an sg_dev struct, this function makes sure the 
+ * Given a pointer to an scsisim_dev struct, this function makes sure the 
  * attached USB device is supported, and if so, sends SCSI 
  * initialization commands to the device.
  *
@@ -258,14 +258,14 @@ int scsisim_close_device(struct sg_dev *device);
  * Return value from usb_get_vendor_product
  * Return value from scsi_send_cdb
  */
-int scsisim_init_device(struct sg_dev *device);
+int scsisim_init_device(struct scsisim_dev *device);
 
 
 /**
  * Function: scsisim_select_file
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * file:	ID number of file to select (2 bytes, per GSM 
  *		standard -- you can use the GSM_FILE_* constants
  *		defined above).
@@ -281,14 +281,14 @@ int scsisim_init_device(struct sg_dev *device);
  * Return value from sim_process_scsi_sense: number of bytes waiting in GET RESPONSE
  * SCSISIM_SCSI_NO_SENSE_DATA
  */
-int scsisim_select_file(const struct sg_dev *device, uint16_t file);
+int scsisim_select_file(const struct scsisim_dev *device, uint16_t file);
 
 
 /**
  * Function: scsisim_get_response
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * data:	Buffer for response data.
  * len:		Length of data buffer.
  * command:	The GSM command to get a response for: see GET RESPONSE command constants.
@@ -304,7 +304,7 @@ int scsisim_select_file(const struct sg_dev *device, uint16_t file);
  * Return value from scsi_send_cdb
  * Return value from sim_process_scsi_sense
  */
-int scsisim_get_response(const struct sg_dev *device,
+int scsisim_get_response(const struct scsisim_dev *device,
 			 uint8_t *data,
 			 uint8_t len,
 			 int command,
@@ -315,7 +315,7 @@ int scsisim_get_response(const struct sg_dev *device,
  * Function: scsisim_select_file_and_get_response
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * file:	ID number of file to select (2 bytes, per GSM 
  *		standard -- you can use the GSM_FILE_* constants
  *		defined above).
@@ -333,7 +333,7 @@ int scsisim_get_response(const struct sg_dev *device,
  * Return value from scsisim_select_file
  * Return value from scsisim_get_response
  */
-int scsisim_select_file_and_get_response(const struct sg_dev *device,
+int scsisim_select_file_and_get_response(const struct scsisim_dev *device,
 					 uint16_t file,
 					 uint8_t *data,
 					 uint8_t len,
@@ -345,7 +345,7 @@ int scsisim_select_file_and_get_response(const struct sg_dev *device,
  * Function: scsisim_read_record
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * recno:	Record number to read in currently selected file (records
  *		start at 1, NOT zero!).
  * data:	Buffer for record data.
@@ -361,7 +361,7 @@ int scsisim_select_file_and_get_response(const struct sg_dev *device,
  * Return value from scsi_send_cdb
  * Return value from sim_process_scsi_sense
  */
-int scsisim_read_record(const struct sg_dev *device,
+int scsisim_read_record(const struct scsisim_dev *device,
 			uint8_t recno,
 			uint8_t *data,
 			uint8_t len);
@@ -371,7 +371,7 @@ int scsisim_read_record(const struct sg_dev *device,
  * Function: scsisim_read_binary
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * data:	Buffer for binary data.
  * offset:	Offset from which to begin read (zero-based).
  * len:		Length of data buffer.
@@ -386,7 +386,7 @@ int scsisim_read_record(const struct sg_dev *device,
  * Return value from scsi_send_cdb
  * Return value from sim_process_scsi_sense
  */
-int scsisim_read_binary(const struct sg_dev *device,
+int scsisim_read_binary(const struct scsisim_dev *device,
 			uint8_t *data,
 			uint16_t offset,
 			uint8_t len);
@@ -396,7 +396,7 @@ int scsisim_read_binary(const struct sg_dev *device,
  * Function: scsisim_update_record
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * recno:	Record number to update in currently selected file (records
  *		start at 1, NOT zero!).
  * data:	Buffer for record data.
@@ -412,7 +412,7 @@ int scsisim_read_binary(const struct sg_dev *device,
  * Return value from scsi_send_cdb
  * Return value from sim_process_scsi_sense
  */
-int scsisim_update_record(const struct sg_dev *device,
+int scsisim_update_record(const struct scsisim_dev *device,
 			  uint8_t recno,
 			  uint8_t *data,
 			  uint8_t len);
@@ -422,7 +422,7 @@ int scsisim_update_record(const struct sg_dev *device,
  * Function: scsisim_update_binary
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * data:	Buffer for binary data.
  * offset:	Offset from which to begin write (zero-based).
  * len:		Length of data buffer.
@@ -437,7 +437,7 @@ int scsisim_update_record(const struct sg_dev *device,
  * Return value from scsi_send_cdb
  * Return value from sim_process_scsi_sense
  */
-int scsisim_update_binary(const struct sg_dev *device,
+int scsisim_update_binary(const struct scsisim_dev *device,
 			  uint8_t *data,
 			  uint16_t offset,
 			  uint8_t len);
@@ -447,7 +447,7 @@ int scsisim_update_binary(const struct sg_dev *device,
  * Function: scsisim_verify_chv
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * chv:		Number of CHV to check (i.e., CHV1, CHV2).
  * pin:		PIN to use for verification.
  *
@@ -465,7 +465,7 @@ int scsisim_update_binary(const struct sg_dev *device,
  * Return value from scsi_send_cdb
  * Return value from sim_process_scsi_sense
  */
-int scsisim_verify_chv(const struct sg_dev *device,
+int scsisim_verify_chv(const struct scsisim_dev *device,
 		       uint8_t chv,
 		       const char *pin);
 
@@ -474,7 +474,7 @@ int scsisim_verify_chv(const struct sg_dev *device,
  * Function: scsisim_send_raw_command
  *
  * Parameters:
- * device:	Pointer to sg_dev struct.
+ * device:	Pointer to scsisim_dev struct.
  * direction:	SIM_READ or SIM_WRITE.
  * command:	GSM command code to run.
  * P1:		Parameter 1 for the GSM command.
@@ -495,7 +495,7 @@ int scsisim_verify_chv(const struct sg_dev *device,
  * Return value from scsi_send_cdb
  * Return value from sim_process_scsi_sense
  */
-int scsisim_send_raw_command(const struct sg_dev *device,
+int scsisim_send_raw_command(const struct scsisim_dev *device,
 			     uint8_t direction,
 			     uint8_t command,
 			     uint8_t P1,
